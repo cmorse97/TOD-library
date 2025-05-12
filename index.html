@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>TOD | Library</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<h1>Library</h1>
+		<div class="add-book-container">
+			<button class="new-book-btn">New Book</button>
+		</div>
+		<div class="library-container"></div>
+		<div id="add-book-modal" class="modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Add New Book</h2>
+					<span class="close-btn">&times;</span>
+				</div>
+				<div class="modal-body">
+					<form id="add-book-form">
+						<div class="form-group">
+							<label for="title">Title:</label>
+							<input type="text" id="title" name="title" required />
+						</div>
+						<div class="form-group">
+							<label for="author">Author:</label>
+							<input type="text" id="author" name="author" required />
+						</div>
+						<div class="form-group">
+							<label for="pages">Pages:</label>
+							<input type="number" id="pages" name="pages" min="1" required />
+						</div>
+						<div class="form-group form-group-checkbox">
+							<label for="read">Read:</label>
+							<input type="checkbox" id="read" name="read" />
+						</div>
+						<div class="form-group">
+							<button type="submit" class="modal-btn">
+								Add Book to Library
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="app.js" defer></script>
+	</body>
+</html>
