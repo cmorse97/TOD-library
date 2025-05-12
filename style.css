@@ -68,6 +68,50 @@ h1 {
 	flex-grow: 1;
 }
 
+.card-footer {
+	display: flex;
+	gap: 20px;
+	padding: 20px;
+	border-top: 1px solid #eee;
+	background-color: #f9f9f9;
+}
+
+.card-footer button.delete-btn {
+	display: block;
+	width: 50%;
+	padding: 12px 25px;
+	background-color: #dc3545;
+	color: white;
+	border-radius: 4px;
+	border: none;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+.card-footer button.delete-btn:hover {
+	background-color: #c82333;
+	transform: scale(1.05);
+}
+
+.card-footer button.edit-btn {
+	display: block;
+	width: 50%;
+	padding: 12px 25px;
+	background-color: #007bff;
+	color: white;
+	border-radius: 4px;
+	border: none;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+.card-footer button.edit-btn:hover {
+	background-color: #0056b3;
+	transform: scale(1.05);
+}
+
 .book-pages {
 	margin: 0 0 15px 0;
 	font-size: 0.9rem;
@@ -189,7 +233,7 @@ h1 {
 }
 
 /* Form Styling */
-#add-book-form {
+#book-form {
 	display: block;
 }
 
@@ -312,5 +356,9 @@ h1 {
 
 	.book-title {
 		font-size: 1.2rem;
+	}
+
+	.card-footer {
+		flex-direction: column;
 	}
 }
