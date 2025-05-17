@@ -1,13 +1,75 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const addBookBtn = document.querySelector('.new-book-btn')
-	const modal = document.getElementById('add-book-modal')
 	const closeBtn = document.querySelector('.close-btn')
+	const submitBtn = document.querySelector('button[type="submit"]')
 	const bookForm = document.getElementById('book-form')
 	const libraryContainer = document.querySelector('.library-container')
-	const submitBtn = document.querySelector('button[type="submit"]')
+	const modal = document.getElementById('add-book-modal')
 
 	let modalMode = 'add'
 	let bookIdToEdit = null
+
+	// --- BOOK CLASS ---
+	class Book {
+		constructor(title, author, pages, read, id) {
+			this.title = title
+			this.author = author
+			this.pages = pages
+			this.read = read
+			this.id = id
+		}
+
+		get info() {
+			console.log(
+				`${this.title} by ${this.author}, ${this.pages} pages, ${
+					this.read ? 'read' : 'not read yet'
+				}`
+			)
+		}
+	}
+
+	// --- LIBRARY CLASS ---
+	class Library {
+		constructor() {
+			this.books = [
+				{
+					title: 'Terminal List',
+					author: 'Jack Carr',
+					pages: 350,
+					read: true,
+					id: crypto.randomUUID()
+				}
+			]
+		}
+
+		addBook(book) {
+			this.books.push(book)
+		}
+
+		updateBook(updatedBook) {
+			const index = this.books.findIndex(book => book.id === updatedBook.id)
+			if (index !== -1) {
+				this.books[index] = updatedBook
+			}
+		}
+
+		getBookById(id) {
+			return this.books.find(book => book.id === id)
+		}
+
+		removeBook(id) {
+			const index = this.books.findIndex(book => book.id === id)
+			if (index !== -1) {
+				this.books.splice(index, 1)
+			}
+		}
+
+		getAllBooks() {
+			return this.books
+		}
+	}
+
+	const library = new Library()
 
 	// --- MODAL CONTROLS ---
 	function openModal() {
@@ -47,51 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	})
 
-	// --- LIBRARY FUNCTIONALITY ---
-	const myLibrary = [
-		{
-			title: 'Terminal List',
-			author: 'Jack Carr',
-			pages: 350,
-			read: true,
-			id: crypto.randomUUID()
-		}
-	]
-
-	function Book(title, author, pages, read, id) {
-		// the constructor...
-		this.title = title // text
-		this.author = author // text
-		this.pages = pages // number
-		this.read = read // boolean
-		this.id = id
-		this.info = function () {
-			console.log(
-				`${this.title} by ${this.author}, ${this.pages} pages, ${
-					this.read ? 'read' : 'not read yet'
-				}`
-			)
-		}
-	}
-
-	function addBookToLibrary(title, author, pages, read, id) {
-		// take params, create a book then store it in the library
-		const book = new Book(title, author, pages, read, id)
-
-		myLibrary.push(book)
-	}
-
-	function updateBookInLibrary(title, author, pages, read, id) {
-		const bookIndex = myLibrary.findIndex(book => book.id === id)
-		if (bookIndex !== -1) {
-			myLibrary[bookIndex] = { title, author, pages, read, id }
-		}
-	}
-
 	function displayBooks() {
 		libraryContainer.innerHTML = ''
 
-		myLibrary.forEach(book => {
+		library.getAllBooks().forEach(book => {
 			const card = document.createElement('div')
 			card.classList.add('book-card')
 			card.dataset.bookId = book.id
@@ -118,10 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const deleteBtn = card.querySelector('.delete-btn')
 			deleteBtn.addEventListener('click', function () {
 				const bookIdToDelete = this.dataset.bookId
-				const bookToDelete = myLibrary.findIndex(
-					book => book.id === bookIdToDelete
-				)
-				myLibrary.splice(bookToDelete, 1)
+				library.removeBook(bookIdToDelete)
 				displayBooks()
 			})
 
@@ -129,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			editBtn.addEventListener('click', function () {
 				modalMode = 'edit'
 				bookIdToEdit = this.dataset.bookId
-				const bookToEdit = myLibrary.find(book => book.id === bookIdToEdit)
+				const bookToEdit = library.getBookById(bookIdToEdit)
 
 				if (bookToEdit) {
 					document.getElementById('title').value = bookToEdit.title || ''
@@ -165,11 +183,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		if (modalMode === 'edit' && bookIdToEdit) {
-			updateBookInLibrary(title, author, pages, read, bookIdToEdit)
+			const updatedBook = new Book(title, author, pages, read, bookIdToEdit)
+			library.updateBook(updatedBook)
 			bookIdToEdit = null
 		} else {
 			const id = crypto.randomUUID()
-			addBookToLibrary(title, author, pages, read, id)
+			const newBook = new Book(title, author, pages, read, id)
+			library.addBook(newBook)
 		}
 
 		// Add new book to library
@@ -183,4 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	} else {
 		console.error('Library container not found. Books cannot be displayed.')
 	}
+
+	console.log(library.books[0])
 })
